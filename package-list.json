@@ -1,0 +1,14 @@
+{
+     "package-id": "mydrg",
+     "title": "Malaysia DRG (MY-DRG) Implementation Guide (R4)",
+     "canonical": "https://vivekjason.github.io/drg-fhirIG",
+     "list": [
+          {
+               "version": "current",
+               "desc": "Continuous Integration Build",
+               "path": "https://vivekjason.github.io/drg-fhirIG",
+               "status": "ci-build",
+               "current": true
+          }
+     ]
+}

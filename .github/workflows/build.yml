@@ -1,32 +1,97 @@
-name: Build & Publish MY-DRG IG (R4)
+name: Build & Deploy FHIR IG
+
 on:
   push:
     branches: [ main ]
   workflow_dispatch:
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Build IG with Publisher
-        uses: qligier/fhir-ig-action@v0.3.0
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
         with:
-          sushi: true
-          publisher_version: latest
+          distribution: temurin
+          java-version: '17'
 
-      - name: Install WeasyPrint
-        run: |
-          python3 -m pip install --upgrade pip
-          pip install weasyprint
-      - name: Render PDF
-        run: |
-          mkdir -p output/downloads
-          weasyprint output/index.html output/downloads/MYDRG-IG.pdf
-
-      - name: Deploy to gh-pages
-        uses: peaceiris/actions-gh-pages@v3
+      - name: Set up Node (for SUSHI)
+        uses: actions/setup-node@v4
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./output
+          node-version: '20'
+
+      - name: Install SUSHI
+        run: npm install -g fsh-sushi@latest
+
+      - name: Cache FHIR packages and input-cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.fhir/packages
+            input-cache
+          key: ${{ runner.os }}-igcache-${{ hashFiles('sushi-config.yaml', 'ig.ini', 'input/fsh/**/*.fsh') }}
+          restore-keys: |
+            ${{ runner.os }}-igcache-
+
+      - name: Run SUSHI
+        run: sushi . --out .
+
+      - name: Download IG Publisher (if not cached)
+        run: |
+          mkdir -p input-cache
+          if [ ! -f input-cache/publisher.jar ]; then
+            curl -L -o input-cache/publisher.jar https://github.com/HL7/fhir-ig-publisher/releases/latest/download/publisher.jar
+          fi
+
+      # Install Ruby/Jekyll so Publisher can render the site
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+      - name: Install Jekyll and plugins
+        run: |
+          gem install bundler
+          gem install jekyll jekyll-remote-theme webrick kramdown rouge json
+
+      - name: Build IG (Publisher)
+        run: |
+          java -Xmx4G -Dfile.encoding=UTF-8 -jar input-cache/publisher.jar -ig ig.ini
+
+      # Optional: try to create a PDF from the generated site
+      - name: Install wkhtmltopdf
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wkhtmltopdf
+      - name: Generate PDF
+        run: |
+          wkhtmltopdf --enable-local-file-access output/index.html output/MYDRG-IG.pdf || true
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: output
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

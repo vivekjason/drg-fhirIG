@@ -1,0 +1,3 @@
+Output File                                  Name                       Type      FSH File                Lines
+ExplanationOfBenefit-eob-example-mydrg.json  eob-example-mydrg          Instance  examples.fsh            2 - 23
+StructureDefinition-mydrg-eob.json           MYDRGExplanationOfBenefit  Profile   profiles-mydrg-eob.fsh  5 - 26

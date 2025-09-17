@@ -1,0 +1,16 @@
+# FHIR IG build outputs and caches
+/output/
+/temp/
+/fsh-generated/
+/input-cache/
+/.publisher/
+/.jekyll-cache/
+/node_modules/
+/*.log
+
+# R / RStudio
+.Rproj.user
+.Rhistory
+.RData
+.httr-oauth
+.quarto

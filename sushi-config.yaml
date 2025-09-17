@@ -1,0 +1,20 @@
+id: mydrg
+canonical: https://vivekjason.github.io/drg-fhirIG
+name: MYDRG
+title: Malaysia DRG (MY-DRG) Implementation Guide (R4)
+status: draft
+version: 0.1.0
+fhirVersion: 4.0.1
+releaseLabel: ci-build         # or 'trial-use' for a formal release
+copyrightYear: 2025
+license: CC-BY-NC-4.0
+publisher:
+  name: MOH Malaysia – Digital Health Division
+  url: https://www.moh.gov.my
+jurisdiction: urn:iso:std:iso:3166#MY "Malaysia"
+dependencies:
+  hl7.terminology: 5.5.0
+  hl7.fhir.extensions.r5: 4.0.1   # <-- needed for the EOB.diagnosisRelatedGroup extension
+menu:
+  Home: index.html
+  Artifacts: artifacts.html

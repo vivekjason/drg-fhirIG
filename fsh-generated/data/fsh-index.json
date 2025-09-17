@@ -1,0 +1,18 @@
+[
+  {
+    "outputFile": "ExplanationOfBenefit-eob-example-mydrg.json",
+    "fshName": "eob-example-mydrg",
+    "fshType": "Instance",
+    "fshFile": "examples.fsh",
+    "startLine": 2,
+    "endLine": 23
+  },
+  {
+    "outputFile": "StructureDefinition-mydrg-eob.json",
+    "fshName": "MYDRGExplanationOfBenefit",
+    "fshType": "Profile",
+    "fshFile": "profiles-mydrg-eob.fsh",
+    "startLine": 5,
+    "endLine": 26
+  }
+]

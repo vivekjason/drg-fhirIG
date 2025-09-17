@@ -1,0 +1,86 @@
+{
+  "resourceType": "ImplementationGuide",
+  "id": "mydrg",
+  "url": "http://moh.gov.my/fhir/ImplementationGuide/mydrg/ImplementationGuide/mydrg",
+  "version": "0.1.0",
+  "name": "MYDRG",
+  "title": "Malaysia DRG (MY-DRG) Implementation Guide (R4)",
+  "status": "draft",
+  "publisher": "MOH Malaysia – Digital Health Division",
+  "contact": [
+    {
+      "name": "MOH Malaysia – Digital Health Division",
+      "telecom": [
+        {
+          "system": "url",
+          "value": "https://www.moh.gov.my"
+        }
+      ]
+    }
+  ],
+  "jurisdiction": [
+    {
+      "coding": [
+        {
+          "code": "MY",
+          "system": "urn:iso:std:iso:3166",
+          "display": "Malaysia"
+        }
+      ]
+    }
+  ],
+  "packageId": "mydrg",
+  "license": "CC-BY-NC-4.0",
+  "fhirVersion": [
+    "4.0.1"
+  ],
+  "dependsOn": [
+    {
+      "packageId": "hl7.terminology",
+      "version": "5.5.0",
+      "uri": "http://terminology.hl7.org/ImplementationGuide/hl7.terminology",
+      "id": "hl7_terminology"
+    }
+  ],
+  "definition": {
+    "resource": [
+      {
+        "reference": {
+          "reference": "ExplanationOfBenefit/eob-example-mydrg"
+        },
+        "name": "Example EOB with MY-DRG",
+        "exampleCanonical": "http://moh.gov.my/fhir/ImplementationGuide/mydrg/StructureDefinition/mydrg-eob"
+      },
+      {
+        "reference": {
+          "reference": "StructureDefinition/mydrg-eob"
+        },
+        "name": "MY-DRG ExplanationOfBenefit (R4)",
+        "description": "EOB with mandatory DRG assignment for Malaysian casemix.",
+        "exampleBoolean": false
+      }
+    ],
+    "page": {
+      "nameUrl": "toc.html",
+      "title": "Table of Contents",
+      "generation": "html",
+      "page": [
+        {
+          "nameUrl": "index.html",
+          "title": "Home",
+          "generation": "markdown"
+        }
+      ]
+    },
+    "parameter": [
+      {
+        "code": "copyrightyear",
+        "value": "2025"
+      },
+      {
+        "code": "releaselabel",
+        "value": "ci-build"
+      }
+    ]
+  }
+}

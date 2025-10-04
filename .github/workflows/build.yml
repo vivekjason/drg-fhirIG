@@ -41,7 +41,7 @@ jobs:
           path: |
             ~/.fhir/packages
             input-cache
-          key: ${{ runner.os }}-igcache-${{ hashFiles('sushi-config.yaml', 'ig.ini', 'input/fsh/**/*.fsh') }}
+          key: ${{ runner.os }}-igcache-${{ hashFiles('sushi-config.yaml', 'ig.ini', 'input/fsh/**/*.fsh', 'input/includes/**/*.html', 'input/pagecontent/**/*.md') }}
           restore-keys: |
             ${{ runner.os }}-igcache-
 
@@ -55,7 +55,7 @@ jobs:
             curl -L -o input-cache/publisher.jar https://github.com/HL7/fhir-ig-publisher/releases/latest/download/publisher.jar
           fi
 
-      # Install Ruby/Jekyll so Publisher can render the site
+      # Ruby/Jekyll so Publisher can render pages (safe default)
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
@@ -69,7 +69,7 @@ jobs:
         run: |
           java -Xmx4G -Dfile.encoding=UTF-8 -jar input-cache/publisher.jar -ig ig.ini
 
-      # Optional: try to create a PDF from the generated site
+      # Create a PDF of key pages (index is usually enough)
       - name: Install wkhtmltopdf
         run: |
           sudo apt-get update
@@ -77,6 +77,14 @@ jobs:
       - name: Generate PDF
         run: |
           wkhtmltopdf --enable-local-file-access output/index.html output/MYDRG-IG.pdf || true
+
+      # Save the PDF as a workflow artifact (for easy download from Actions)
+      - name: Upload PDF artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: MYDRG-IG-pdf
+          path: output/MYDRG-IG.pdf
+          if-no-files-found: ignore
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
